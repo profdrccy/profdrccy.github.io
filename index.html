@@ -1,0 +1,722 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Prof. Dr. Cahit Çağlar Yalçıner</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Prof. Dr. Cahit Çağlar Yalçıner — Jeofizik, yeraltı radarı (GPR) ve yapı radarı (GPR-CX) ile tahribatsız sığ görüntüleme.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,400..800&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: survey-sheet feel. A radargram band runs under the hero; sections are ruled like a field log, readouts in mono. */
+:root{
+  --paper:#f2f5f4; --panel:#e6ecea; --ink:#13201e; --muted:#566664; --line:#ccd6d3;
+  --accent:#0d6f66; --accent-ink:#ffffff; --signal:#a8650a;
+  --scan-bg:#1a2523; --scan-fg:#d9e4e1;
+  --f-display:"Archivo","Helvetica Neue",Arial,sans-serif;
+  --f-body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+  --wrap:1120px;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --paper:#0e1514; --panel:#152120; --ink:#e3ecea; --muted:#94a6a3; --line:#253532;
+  --accent:#3cc7b5; --accent-ink:#06201d; --signal:#efb04a; --scan-bg:#0a100f; --scan-fg:#cfdcd9; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#0e1514; --panel:#152120; --ink:#e3ecea; --muted:#94a6a3; --line:#253532;
+  --accent:#3cc7b5; --accent-ink:#06201d; --signal:#efb04a; --scan-bg:#0a100f; --scan-fg:#cfdcd9; color-scheme:dark}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:16.5px;line-height:1.62;margin:0}
+html.en .tr, html:not(.en) .en{display:none!important}
+a{color:var(--accent);text-underline-offset:3px}
+a:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:2px}
+.wrap{max-width:var(--wrap);margin:0 auto;padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px))}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;margin:0;line-height:1.1}
+p{margin:0}
+.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+
+/* top bar */
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--paper)}
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;background:color-mix(in srgb,var(--paper) 92%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.top .wrap{display:flex;align-items:center;gap:20px;height:60px}
+.brand{font-family:var(--f-display);font-weight:700;font-stretch:115%;text-decoration:none;color:var(--ink);letter-spacing:.01em;white-space:nowrap}
+.brand small{font-family:var(--f-mono);font-weight:400;font-size:12px;color:var(--muted);margin-left:8px;letter-spacing:.04em}
+nav.links{display:flex;gap:22px;margin-left:auto;font-size:14.5px}
+nav.links a{color:var(--muted);text-decoration:none}
+nav.links a:hover{color:var(--ink)}
+.lang{display:flex;border:1px solid var(--line);border-radius:999px;overflow:hidden;font-family:var(--f-mono);font-size:12.5px}
+.lang button{background:none;border:0;color:var(--muted);padding:5px 11px;cursor:pointer;font:inherit}
+.lang button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+@media (max-width:860px){nav.links{display:none}.lang{margin-left:auto}}
+
+/* hero */
+.hero{padding-block:72px 48px}
+.hero .wrap{display:grid;grid-template-columns:1fr 300px;gap:56px;align-items:center}
+.eyebrow{font-family:var(--f-mono);font-size:12.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}
+.hero h1{font-size:clamp(40px,6.2vw,76px);font-weight:800;font-stretch:112%;letter-spacing:-.015em;margin-top:14px}
+.hero h1 span.pre{display:block;font-size:.36em;font-weight:500;font-stretch:100%;letter-spacing:.02em;color:var(--muted);margin-bottom:8px}
+.lede{font-size:clamp(18px,2vw,21px);line-height:1.5;max-width:36em;margin-top:22px;color:var(--ink)}
+.lede em{font-style:normal;color:var(--accent);font-weight:500}
+.cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:30px}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:11px 18px;border-radius:4px;font-weight:600;font-size:15px;text-decoration:none;border:1px solid var(--ink);color:var(--ink)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn:hover{transform:translateY(-1px)}
+.portrait{position:relative;aspect-ratio:4/5;max-width:100%;background:var(--panel);border:1px solid var(--line);overflow:hidden}
+.portrait img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.portrait .ph{position:absolute;inset:0;display:grid;place-items:center;text-align:center;color:var(--muted)}
+.portrait .ph b{display:block;font-family:var(--f-display);font-size:64px;font-stretch:120%;font-weight:800;color:var(--line)}
+.portrait .ph span{font-family:var(--f-mono);font-size:12px}
+.tick{position:absolute;font-family:var(--f-mono);font-size:10.5px;color:var(--muted);right:12px;bottom:16px}
+@media (max-width:860px){.hero{padding-block:44px 32px}.hero .wrap{grid-template-columns:1fr;gap:32px}.portrait{max-width:260px}}
+
+/* radargram band */
+.scan{background:var(--scan-bg);color:var(--scan-fg)}
+.scan .wrap{padding-block:18px}
+.scan figure{margin:0;position:relative}
+.scan canvas{display:block;width:100%;height:260px}
+@media (max-width:620px){.scan canvas{height:220px}}
+.scan figcaption{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;font-family:var(--f-mono);font-size:11.5px;opacity:.75;margin-top:10px}
+
+/* metrics */
+.metrics{border-bottom:1px solid var(--line)}
+.metrics .wrap{display:grid;grid-template-columns:repeat(5,1fr);padding-block:0}
+.metric{padding:26px 18px 24px 0;border-right:1px solid var(--line)}
+.metric:last-child{border-right:0}
+.metric + .metric{padding-left:18px}
+.metric .v{font-family:var(--f-display);font-size:34px;font-weight:700;font-stretch:110%;font-variant-numeric:tabular-nums;line-height:1}
+.metric .k{font-family:var(--f-mono);font-size:12px;color:var(--muted);margin-top:8px;letter-spacing:.03em}
+@media (max-width:760px){.metrics .wrap{grid-template-columns:repeat(2,1fr)}.metric{border-right:0;border-bottom:1px solid var(--line);padding-left:0!important}.metric:last-child{border-bottom:0}}
+.asof{font-family:var(--f-mono);font-size:11.5px;color:var(--muted);padding-block:10px}
+
+/* sections */
+section.blk{padding-block:84px;border-bottom:1px solid var(--line)}
+.sh{display:grid;grid-template-columns:220px 1fr;gap:40px;margin-bottom:40px;align-items:baseline}
+.sh .eyebrow{padding-top:6px}
+.sh h2{font-size:clamp(28px,3.6vw,42px);font-weight:700;font-stretch:108%;letter-spacing:-.01em}
+.sh p{color:var(--muted);margin-top:12px;max-width:40em}
+.body{display:grid;grid-template-columns:220px 1fr;gap:40px}
+.body > *{min-width:0}
+@media (max-width:860px){section.blk{padding-block:56px}.sh,.body{grid-template-columns:1fr;gap:12px}.body .side{display:none}}
+.prose p+p{margin-top:16px}
+.prose{max-width:40em}
+
+/* research areas */
+.areas{display:grid;grid-template-columns:repeat(2,1fr);gap:0;border-top:1px solid var(--line)}
+.area{padding:26px 26px 26px 0;border-bottom:1px solid var(--line)}
+.area:nth-child(odd){border-right:1px solid var(--line)}
+.area:nth-child(even){padding-left:26px;padding-right:0}
+.area h3{font-size:20px;font-weight:650;font-stretch:105%}
+.area p{color:var(--muted);margin-top:8px;font-size:15.5px}
+.area .freq{font-family:var(--f-mono);font-size:12px;color:var(--signal);margin-top:12px}
+@media (max-width:700px){.areas{grid-template-columns:1fr}.area{padding:22px 0!important;border-right:0!important}}
+
+/* method */
+.flow{display:flex;flex-wrap:wrap;gap:8px;margin-top:28px;padding:0;list-style:none}
+.flow li{font-family:var(--f-mono);font-size:13px;padding:6px 10px;border:1px solid var(--line);background:var(--panel)}
+.flow li::after{content:"→";margin-left:10px;color:var(--muted)}
+.flow li:last-child::after{content:""}
+.check{margin-top:28px;display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.check div{border-top:2px solid var(--ink);padding-top:12px}
+.check b{display:block;font-family:var(--f-display);font-stretch:105%;font-size:17px;margin-bottom:6px}
+.check p{font-size:15px;color:var(--muted)}
+@media (max-width:760px){.check{grid-template-columns:1fr}}
+
+/* projects */
+.filters{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:24px}
+.filters button{font-family:var(--f-mono);font-size:12.5px;background:none;border:1px solid var(--line);color:var(--muted);padding:6px 12px;border-radius:999px;cursor:pointer}
+.filters button[aria-pressed="true"]{border-color:var(--ink);color:var(--ink);background:var(--panel)}
+.projects{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.proj{background:var(--panel);border:1px solid var(--line);padding:22px;display:flex;flex-direction:column;gap:10px}
+.proj .meta{display:flex;justify-content:space-between;gap:8px;font-family:var(--f-mono);font-size:11.5px;color:var(--muted);letter-spacing:.04em;text-transform:uppercase}
+.proj h3{font-size:19px;font-weight:650;font-stretch:104%}
+.proj p{font-size:15px;color:var(--muted)}
+.proj .read{margin-top:auto;padding-top:12px;border-top:1px dashed var(--line);font-family:var(--f-mono);font-size:13px;color:var(--signal)}
+@media (max-width:980px){.projects{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:620px){.projects{grid-template-columns:1fr}}
+
+/* publications */
+.pubs{list-style:none;margin:0;padding:0;border-top:1px solid var(--line)}
+.pubs li{display:grid;grid-template-columns:64px 1fr;gap:20px;padding:18px 0;border-bottom:1px solid var(--line)}
+.pubs .y{font-family:var(--f-mono);color:var(--muted);font-size:14px;padding-top:2px}
+.pubs .t{font-weight:500;overflow-wrap:anywhere}
+.pubs .a a{font-family:var(--f-mono);font-size:12.5px;overflow-wrap:anywhere}
+.pubs .a{font-size:14.5px;color:var(--muted);margin-top:3px}
+.pubs .j{font-style:italic}
+.pubs .tag{display:inline-block;font-family:var(--f-mono);font-size:11px;font-style:normal;border:1px solid var(--line);padding:1px 6px;margin-left:6px;color:var(--muted);vertical-align:1px}
+.more{margin-top:24px;display:flex;flex-wrap:wrap;gap:12px}
+.thesis{margin-top:40px;padding:24px;border:1px solid var(--line);background:var(--panel)}
+.thesis .eyebrow{color:var(--signal)}
+.thesis h3{font-size:20px;margin-top:8px;font-weight:600;font-stretch:102%}
+.thesis p{color:var(--muted);margin-top:10px;font-size:15.5px}
+
+/* ECAY */
+.ecay{display:grid;grid-template-columns:1.1fr 1fr;gap:48px}
+.ecay > *{min-width:0}
+.svc{list-style:none;padding:0;margin:20px 0 0;display:flex;flex-wrap:wrap;gap:8px}
+.svc li{font-size:14px;padding:5px 10px;border:1px solid var(--line)}
+.kit{border:1px solid var(--line)}
+.kit .hd{padding:12px 16px;border-bottom:1px solid var(--line);font-family:var(--f-mono);font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;background:var(--panel)}
+.kit dl{margin:0}
+.kit .row{display:grid;grid-template-columns:120px 1fr;gap:12px;padding:11px 16px;border-bottom:1px solid var(--line);font-size:14.5px}
+.kit .row:last-child{border-bottom:0}
+.kit dt{font-family:var(--f-mono);font-size:12px;color:var(--muted);padding-top:2px}
+.kit dd{margin:0}
+@media (max-width:860px){.ecay{grid-template-columns:1fr}.kit .row{grid-template-columns:1fr;gap:2px}}
+
+/* timeline */
+.tl{list-style:none;margin:0;padding:0}
+.tl li{display:grid;grid-template-columns:140px 1fr;gap:20px;padding:14px 0;border-bottom:1px solid var(--line)}
+.tl .when{font-family:var(--f-mono);font-size:13.5px;color:var(--muted);font-variant-numeric:tabular-nums}
+.tl .what b{font-weight:600}
+.tl .what span{display:block;color:var(--muted);font-size:14.5px}
+@media (max-width:560px){.tl li{grid-template-columns:1fr;gap:2px}}
+
+/* links */
+.ids{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border-top:1px solid var(--line)}
+.ids a{display:block;padding:18px 16px 18px 0;border-bottom:1px solid var(--line);text-decoration:none;color:var(--ink)}
+.ids a:hover b{color:var(--accent)}
+.ids b{display:block;font-family:var(--f-display);font-stretch:105%;font-size:17px}
+.ids span{font-family:var(--f-mono);font-size:12px;color:var(--muted);word-break:break-all}
+@media (max-width:760px){.ids{grid-template-columns:1fr 1fr}}
+@media (max-width:460px){.ids{grid-template-columns:1fr}}
+.contact{margin-top:36px;display:flex;flex-wrap:wrap;gap:32px}
+.contact div{min-width:0}
+.contact .k{font-family:var(--f-mono);font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.copy{margin:0 0 6px 8px;font-family:var(--f-mono);font-size:11.5px;background:none;border:1px solid var(--line);color:var(--muted);padding:2px 8px;cursor:pointer}
+
+footer{padding-block:36px 48px;color:var(--muted);font-size:13.5px}
+footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:16px}
+</style>
+</head>
+<body>
+
+
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="#top">Ç. Yalçıner<small>GPR · GPR-CX</small></a>
+    <nav class="links" aria-label="Bölümler">
+      <a href="#hakkinda"><span class="tr">Hakkında</span><span class="en">About</span></a>
+      <a href="#arastirma"><span class="tr">Araştırma</span><span class="en">Research</span></a>
+      <a href="#projeler"><span class="tr">Projeler</span><span class="en">Projects</span></a>
+      <a href="#yayinlar"><span class="tr">Yayınlar</span><span class="en">Publications</span></a>
+      <a href="#ecay">ECAY</a>
+      <a href="#iletisim"><span class="tr">İletişim</span><span class="en">Contact</span></a>
+    </nav>
+    <div class="lang" role="group" aria-label="Dil / Language">
+      <button type="button" id="btn-tr" data-set="tr" aria-pressed="true">TR</button>
+      <button type="button" id="btn-en" data-set="en" aria-pressed="false">EN</button>
+    </div>
+  </div>
+</header>
+
+<main id="top">
+<section class="hero">
+  <div class="wrap">
+    <div>
+      <div class="eyebrow"><span class="tr">Jeofizik · Tahribatsız sığ görüntüleme</span><span class="en">Geophysics · Non-destructive shallow imaging</span></div>
+      <h1><span class="pre">Prof. Dr.</span>Cahit Çağlar Yalçıner</h1>
+      <p class="lede tr">Yeraltı radarı (GPR) ve yapı radarı (GPR-CX) ile toprağın ve taşın içini kazmadan görüntülüyorum: <em>aktif faylar, antik kentler, tarihi yapılar ve savaş alanları.</em></p>
+      <p class="lede en">I image the ground and historic masonry without digging, using ground-penetrating radar (GPR) and structural radar (GPR-CX): <em>active faults, ancient cities, historic monuments and battlefields.</em></p>
+      <div class="cta">
+        <a class="btn primary" href="#projeler"><span class="tr">Projeleri incele</span><span class="en">See the projects</span></a>
+        <a class="btn" href="#iletisim"><span class="tr">Proje için iletişim</span><span class="en">Discuss a survey</span></a>
+      </div>
+    </div>
+    <div class="portrait" aria-label="Portre">
+      <div class="ph"><div><b>ÇY</b><span class="tr">fotoğraf: foto.jpg</span><span class="en">photo: foto.jpg</span></div></div>
+      <img src="foto.jpg" alt="Prof. Dr. Cahit Çağlar Yalçıner" onerror="this.remove()">
+    </div>
+  </div>
+</section>
+
+<div class="scan" aria-hidden="false">
+  <div class="wrap">
+    <figure>
+      <canvas id="radargram" role="img" aria-label="Örnek bir GPR radargramı çizimi: yatay katman yansımaları ve gömülü nesnelerden gelen hiperbolik yansımalar"></canvas>
+      <figcaption>
+        <span class="tr">Sentetik, işlenmiş radargram · 250 MHz · v = 0.10 m/ns · dewow, arka plan giderme, AGC · normal fay, örtü birimi, boru ve boşluk hiperbolleri</span><span class="en">Synthetic processed radargram · 250 MHz · v = 0.10 m/ns · dewow, background removal, AGC · normal fault, capping unit, pipe and void hyperbolae</span>
+        <span>x: 0–40 m · t: 0–120 ns · z: 0–6 m</span>
+      </figcaption>
+    </figure>
+  </div>
+</div>
+
+<div class="metrics">
+  <div class="wrap">
+    <div class="metric"><div class="v">808</div><div class="k">Google Scholar · <span class="tr">atıf</span><span class="en">citations</span></div></div>
+    <div class="metric"><div class="v">h15</div><div class="k">Scholar h-index</div></div>
+    <div class="metric"><div class="v">427</div><div class="k">Scopus · h12</div></div>
+    <div class="metric"><div class="v">63</div><div class="k">ResearchGate · <span class="tr">çalışma</span><span class="en">works</span></div></div>
+    <div class="metric"><div class="v">2009</div><div class="k"><span class="tr">Çift doktora</span><span class="en">Joint PhD</span> · Strasbourg</div></div>
+  </div>
+</div>
+<div class="wrap asof"><span class="tr">Metrikler Kasım 2026 itibarıyla.</span><span class="en">Metrics as of November 2026.</span></div>
+
+<!-- ABOUT -->
+<section class="blk" id="hakkinda">
+  <div class="wrap">
+    <div class="sh">
+      <div class="eyebrow"><span class="tr">Hakkında</span><span class="en">About</span></div>
+      <h2><span class="tr">Mühendis olmak istedim, yol beni jeofiziğe getirdi.</span><span class="en">I set out to be an engineer; the road led me to geophysics.</span></h2>
+    </div>
+    <div class="body">
+      <div class="side"></div>
+      <div class="prose">
+        <div class="tr">
+          <p>Çanakkale Onsekiz Mart Üniversitesi Çan Meslek Yüksekokulu'nda (Maden Teknolojileri) profesörüm ve ECAY Teknoloji'nin kurucu ortağı ve CEO'suyum. Bugün çalışmamın büyük kısmı, sahada karar verilmesi gereken özel jeofizik projelerinden oluşuyor.</p>
+          <p>Jeofizik mühendisliğini İTÜ'de okudum; ilk hocam Aykut Barka'ydı. ESOGÜ'de VLF-EM ile örtülü aktif faylar üzerine yüksek lisans yaptım. Doktoramı ESOGÜ Jeoloji ve Université de Strasbourg (IPGS) arasında çift diploma olarak 2009'da tamamladım; Büyük Menderes Grabeni'nde GPR ile paleosismoloji ve arkeosismoloji çalıştım.</p>
+          <p>Yaklaşımım basit: radargramı tek başına yorumlamam. Hendek, kazı, endoskop, ultrasonik hız, termal ve nem ölçümüyle doğrular, sonucu sayıyla veririm. Atım kaç santimetre, boşluk oranı yüzde kaç, enjeksiyon nereye ve ne kadar. Bu sayılar, restorasyon ve kazı ekiplerinin ertesi gün ne yapacağını belirliyor.</p>
+        </div>
+        <div class="en">
+          <p>I am a professor at Çanakkale Onsekiz Mart University, Çan Vocational School (Mining Technologies), and co-founder and CEO of ECAY Teknoloji. Most of my work today is applied geophysical projects where a decision has to be made on site.</p>
+          <p>I studied geophysical engineering at Istanbul Technical University, where Aykut Barka was my first teacher. My MSc at Eskişehir Osmangazi University used VLF-EM to locate concealed active faults. I completed a joint PhD in 2009 between ESOGÜ (Geology) and the Université de Strasbourg (IPGS, Geophysics), using GPR for palaeoseismology and archaeoseismology in the Büyük Menderes Graben.</p>
+          <p>My approach is simple: I do not interpret a radargram on its own. I check it against trenches, excavation, endoscopy, ultrasonic pulse velocity, thermal and moisture data, and I report the result as numbers. How many centimetres of offset, what void ratio, where to inject grout and how much. Those numbers decide what restoration and excavation teams do the next day.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RESEARCH -->
+<section class="blk" id="arastirma">
+  <div class="wrap">
+    <div class="sh">
+      <div class="eyebrow"><span class="tr">Araştırma alanları</span><span class="en">Research areas</span></div>
+      <div>
+        <h2><span class="tr">Dört alan, tek yöntem ailesi</span><span class="en">Four fields, one family of methods</span></h2>
+        <p><span class="tr">Anten frekansını hedef derinliğe göre seçerim: tektonikte 100–500 MHz, yapılarda 1–2.3 GHz.</span><span class="en">Antenna frequency follows target depth: 100–500 MHz for tectonics, 1–2.3 GHz for structures.</span></p>
+      </div>
+    </div>
+    <div class="body">
+      <div class="side"></div>
+      <div class="areas">
+        <div class="area">
+          <h3><span class="tr">Aktif tektonik ve paleosismoloji</span><span class="en">Active tectonics &amp; palaeoseismology</span></h3>
+          <p><span class="tr">Gömülü fay izlerini bulmak, hendek yerini seçmek ve deprem başına atımı ölçmek. Büyük Menderes, Simav, Sapanca–Akyazı, Ganos.</span><span class="en">Locating buried fault traces, siting trenches and measuring per-event offset. Büyük Menderes, Simav, Sapanca–Akyazı, Ganos.</span></p>
+          <div class="freq">100–500 MHz · 2D/3D</div>
+        </div>
+        <div class="area">
+          <h3><span class="tr">Arkeojeofizik ve arkeosismoloji</span><span class="en">Archaeogeophysics &amp; archaeoseismology</span></h3>
+          <p><span class="tr">Kazı öncesi gömülü yapıları haritalamak ve antik yapılarda deprem hasarını okumak. Nysa'da bilinmeyen bir podyum tapınağı bu yolla bulundu.</span><span class="en">Mapping buried architecture before excavation and reading earthquake damage in ancient structures. An unknown podium temple at Nysa was found this way.</span></p>
+          <div class="freq">250–750 MHz · <span class="tr">3B zaman dilimleri</span><span class="en">3D time slices</span></div>
+        </div>
+        <div class="area">
+          <h3><span class="tr">Kültürel miras ve restorasyon</span><span class="en">Cultural heritage &amp; restoration</span></h3>
+          <p><span class="tr">Duvar, kubbe ve döşemelerde boşluk, çatlak, nem ve gömülü eleman tespiti; enjeksiyon öncesi ve sonrası kontrol. Ayasofya, Kariye, Topkapı, Yerebatan, Bodrum Kalesi.</span><span class="en">Voids, cracks, moisture and embedded elements in walls, vaults and floors; pre- and post-grouting control. Hagia Sophia, Chora, Topkapı, Basilica Cistern, Bodrum Castle.</span></p>
+          <div class="freq">1.6–2.3 GHz · GPR-CX + UPV + <span class="tr">termal</span><span class="en">thermal</span></div>
+        </div>
+        <div class="area">
+          <h3><span class="tr">Savaş arkeolojisi</span><span class="en">Conflict archaeology</span></h3>
+          <p><span class="tr">Gelibolu Yarımadası'nda siper, sığınak ve mezarların tahribatsız tespiti; şehitliklerin düzenlenmesine veri sağlamak.</span><span class="en">Non-invasive detection of trenches, dugouts and graves on the Gallipoli Peninsula, providing data for the layout of war cemeteries.</span></p>
+          <div class="freq">GPR · <span class="tr">manyetik</span><span class="en">magnetics</span> · <span class="tr">İHA manyetometri</span><span class="en">UAV magnetometry</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- METHOD -->
+<section class="blk" id="yontem">
+  <div class="wrap">
+    <div class="sh">
+      <div class="eyebrow"><span class="tr">Çalışma biçimi</span><span class="en">How I work</span></div>
+      <h2><span class="tr">Ölç, işle, bağımsız veriyle doğrula</span><span class="en">Measure, process, verify with independent data</span></h2>
+    </div>
+    <div class="body">
+      <div class="side"></div>
+      <div>
+        <p class="prose"><span class="tr">Standart GPR veri işleme akışım:</span><span class="en">My standard GPR processing sequence:</span></p>
+        <ol class="flow">
+          <li>time-zero</li><li>dewow</li><li>AGC / <span class="tr">kazanç</span><span class="en">gain</span></li><li>background removal</li><li>band-pass</li><li><span class="tr">hiperbolden hız</span><span class="en">velocity from hyperbolae</span></li><li><span class="tr">migrasyon</span><span class="en">migration</span></li><li><span class="tr">3B zaman dilimleri</span><span class="en">3D time slices</span></li>
+        </ol>
+        <div class="check">
+          <div><b><span class="tr">Doğrulama</span><span class="en">Verification</span></b><p><span class="tr">Hendek logu, kazı, endoskop, UPV, termal kamera, mikrodalga nem, LIDAR.</span><span class="en">Trench logs, excavation, endoscopy, UPV, thermal camera, microwave moisture, LIDAR.</span></p></div>
+          <div><b><span class="tr">Sayısal sonuç</span><span class="en">Numbers, not pictures</span></b><p><span class="tr">Atım ± cm, boşluk oranı %, çatlak genişliği, olası mezar sayısı.</span><span class="en">Offset ± cm, void ratio %, crack width, number of probable graves.</span></p></div>
+          <div><b><span class="tr">Karara dönük</span><span class="en">Decision-ready</span></b><p><span class="tr">Hendek nereye açılmalı, enjeksiyon nereye ve ne kadar, şehitlik nasıl düzenlenmeli.</span><span class="en">Where to trench, where and how much to grout, how to lay out a cemetery.</span></p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section class="blk" id="projeler">
+  <div class="wrap">
+    <div class="sh">
+      <div class="eyebrow"><span class="tr">Seçili projeler</span><span class="en">Selected projects</span></div>
+      <div>
+        <h2><span class="tr">Sahadan sonuçlar</span><span class="en">Results from the field</span></h2>
+        <p><span class="tr">Her kartın altındaki satır, o çalışmanın ölçülen sonucudur.</span><span class="en">The last line of each card is the measured result of that study.</span></p>
+      </div>
+    </div>
+    <div class="filters" role="group" aria-label="Filtre">
+      <button type="button" id="f-all" data-f="all" aria-pressed="true"><span class="tr">Tümü</span><span class="en">All</span></button>
+      <button type="button" id="f-heritage" data-f="heritage" aria-pressed="false"><span class="tr">Kültürel miras</span><span class="en">Heritage</span></button>
+      <button type="button" id="f-arch" data-f="arch" aria-pressed="false"><span class="tr">Arkeoloji</span><span class="en">Archaeology</span></button>
+      <button type="button" id="f-tect" data-f="tect" aria-pressed="false"><span class="tr">Tektonik</span><span class="en">Tectonics</span></button>
+      <button type="button" id="f-war" data-f="war" aria-pressed="false"><span class="tr">Savaş arkeolojisi</span><span class="en">Conflict</span></button>
+    </div>
+    <div class="projects">
+      <article class="proj" data-cat="arch">
+        <div class="meta"><span>Nysa · Aydın</span><span>2009</span></div>
+        <h3><span class="tr">Nysa antik kenti</span><span class="en">Ancient Nysa</span></h3>
+        <p><span class="tr">Antik yol aranırken GPR, bilinmeyen bir podyum tapınağını ortaya çıkardı. Kazı ile doğrulandı.</span><span class="en">While searching for an ancient road, GPR revealed an unknown podium temple, later confirmed by excavation.</span></p>
+        <div class="read">J. Archaeol. Sci. 2009</div>
+      </article>
+      <article class="proj" data-cat="heritage">
+        <div class="meta"><span>İstanbul</span><span>2017–2019</span></div>
+        <h3><span class="tr">Ayasofya</span><span class="en">Hagia Sophia</span></h3>
+        <p><span class="tr">Galeri katı döşemesinde GPR; termal ve mikrodalga nem ölçümleri; Cennet Kapısı önünde gömülü yapılar.</span><span class="en">GPR on the gallery floor; thermal and microwave moisture surveys; buried features in front of the Gate of Paradise.</span></p>
+        <div class="read">Constr. Build. Mater. 2017</div>
+      </article>
+      <article class="proj" data-cat="heritage">
+        <div class="meta"><span>Bodrum · Muğla</span><span>2019</span></div>
+        <h3><span class="tr">Bodrum Kalesi</span><span class="en">Bodrum Castle</span></h3>
+        <p><span class="tr">Duvarlarda enjeksiyon öncesi ve sonrası GPR ile boşlukların ne ölçüde dolduğu ölçüldü.</span><span class="en">Before-and-after GPR measured how well grout injection filled voids in the castle walls.</span></p>
+        <div class="read"><span class="tr">boşluk</span><span class="en">void ratio</span> %17.73 → %1.44</div>
+      </article>
+      <article class="proj" data-cat="heritage">
+        <div class="meta"><span>İstanbul</span><span>2019</span></div>
+        <h3><span class="tr">Kariye (Khora)</span><span class="en">Chora (Kariye)</span></h3>
+        <p><span class="tr">GPR ve ultrasonik hız (UPV) birlikte kullanılarak duvar içi süreksizlikler ve zayıf zonlar haritalandı.</span><span class="en">GPR combined with ultrasonic pulse velocity to map internal discontinuities and weak zones in the masonry.</span></p>
+        <div class="read">J. Appl. Geophys. 2019</div>
+      </article>
+      <article class="proj" data-cat="heritage">
+        <div class="meta"><span>İstanbul</span><span>2020</span></div>
+        <h3><span class="tr">Yerebatan Sarnıcı</span><span class="en">Basilica Cistern</span></h3>
+        <p><span class="tr">Restorasyon sürecinde sarnıç yapı elemanlarının GPR ile incelenmesi.</span><span class="en">GPR investigation of the cistern's structural elements during restoration.</span></p>
+        <div class="read">Mediterr. Archaeol. Archaeom. 2020</div>
+      </article>
+      <article class="proj" data-cat="heritage">
+        <div class="meta"><span>Topkapı · İstanbul</span><span>2017</span></div>
+        <h3><span class="tr">III. Ahmed (Enderun) Kütüphanesi</span><span class="en">Library of Ahmed III (Enderun)</span></h3>
+        <p><span class="tr">Yapı radarı (GPR-CX) ile duvar ve döşemelerde iç yapı tespiti.</span><span class="en">Structural radar (GPR-CX) survey of walls and floors.</span></p>
+        <div class="read"><span class="tr">kitap bölümü</span><span class="en">book chapter</span> · GPR-CX</div>
+      </article>
+      <article class="proj" data-cat="war">
+        <div class="meta"><span>Gelibolu · Çanakkale</span><span>2019–2021</span></div>
+        <h3><span class="tr">Şahindere ve Lone Pine</span><span class="en">Şahindere &amp; Lone Pine</span></h3>
+        <p><span class="tr">1915 savaş alanında gömülü siper ve mezarların arkeojeofizik yöntemlerle araştırılması; Anzak Koyu BAP projesi.</span><span class="en">Archaeogeophysical survey of buried trenches and graves on the 1915 battlefield; Anzac Cove university project.</span></p>
+        <div class="read">JARNAS 2021</div>
+      </article>
+      <article class="proj" data-cat="war">
+        <div class="meta"><span>Biga · Çanakkale</span><span>2018</span></div>
+        <h3><span class="tr">Biga Şehitliği</span><span class="en">Biga Martyrs' Cemetery</span></h3>
+        <p><span class="tr">Şehitliğin düzenlenmesi öncesinde GPR ile mezarların yeri ve sayısı belirlendi.</span><span class="en">GPR located and counted graves before the cemetery was redesigned.</span></p>
+        <div class="read">~150 <span class="tr">olası mezar</span><span class="en">probable graves</span></div>
+      </article>
+      <article class="proj" data-cat="tect">
+        <div class="meta"><span>Sapanca–Akyazı</span><span>2018</span></div>
+        <h3><span class="tr">Kuzey Anadolu Fayı</span><span class="en">North Anatolian Fault</span></h3>
+        <p><span class="tr">Sapanca–Akyazı segmentinde GPR destekli paleosismoloji ile ötelenme ve kayma hızı.</span><span class="en">GPR-supported palaeoseismology on the Sapanca–Akyazı segment: offset and slip rate.</span></p>
+        <div class="read">18.5 m · 22±3 mm/<span class="tr">yıl</span><span class="en">yr</span></div>
+      </article>
+      <article class="proj" data-cat="tect">
+        <div class="meta"><span>Büyük Menderes</span><span>2009</span></div>
+        <h3><span class="tr">Argavlı hendeği</span><span class="en">Argavlı trench</span></h3>
+        <p><span class="tr">GPR'da okunan olay başına atımlar (80/30/30/20 cm ±7) hendek loguyla birebir örtüştü.</span><span class="en">Per-event offsets read on GPR (80/30/30/20 cm ±7) matched the trench log one-to-one.</span></p>
+        <div class="read"><span class="tr">toplam</span><span class="en">total</span> ~160 cm</div>
+      </article>
+      <article class="proj" data-cat="tect">
+        <div class="meta"><span>Simav · Kütahya</span><span>2017</span></div>
+        <h3><span class="tr">Simav Fayı</span><span class="en">Simav Fault</span></h3>
+        <p><span class="tr">GPR profilleriyle fayın sığ geometrisi ve düşey atımları belirlendi.</span><span class="en">GPR profiles resolved the shallow fault geometry and vertical offsets.</span></p>
+        <div class="read">30–80 cm <span class="tr">düşey atım</span><span class="en">vertical offset</span></div>
+      </article>
+      <article class="proj" data-cat="tect">
+        <div class="meta"><span>Ganos · Tekirdağ</span><span>2025</span></div>
+        <h3><span class="tr">Ganos Fayı ve 1912 depremi</span><span class="en">Ganos Fault, 1912 earthquake</span></h3>
+        <p><span class="tr">1912 Mürefte–Şarköy depreminin yüzey izinin GPR ile araştırılması.</span><span class="en">GPR investigation of the surface trace of the 1912 Mürefte–Şarköy earthquake.</span></p>
+        <div class="read">GPR · 2025</div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- PUBLICATIONS -->
+<section class="blk" id="yayinlar">
+  <div class="wrap">
+    <div class="sh">
+      <div class="eyebrow"><span class="tr">Seçili yayınlar</span><span class="en">Selected publications</span></div>
+      <div>
+        <h2><span class="tr">Hakemli dergilerden bir seçki</span><span class="en">A selection from peer-reviewed journals</span></h2>
+        <p><span class="tr">Tam liste için Google Scholar ve Avesis.</span><span class="en">See Google Scholar and Avesis for the full list.</span></p>
+      </div>
+    </div>
+    <div class="body">
+      <div class="side"></div>
+      <div>
+        <ul class="pubs">
+          <li><span class="y">2023</span><div><div class="t">Adli Yer Radarı<span class="tag"><span class="tr">kitap bölümü</span><span class="en">book chapter</span></span></div><div class="a">Büyüksaraç A., Yalçıner C.Ç., Bektaş Ö. · <span class="j">Adli Bilimler ve Kriminalistik Ansiklopedisi, Adalet Yayınevi, 5031–5044</span></div></div></li>
+          <li><span class="y">2021</span><div><div class="t">Gelibolu Yarımadası Savaş Arkeojeofiziği Çalışmaları: Şahindere Şehitliği ve Lone Pine Anıtı Örnek Bölgeleri</div><div class="a">Yalçıner C.Ç., Kurban Y.C., Gündoğdu E., Yücel M.A. · <span class="j">Journal of Advanced Research in Natural and Applied Sciences 7(3), 408–422</span> · <a href="https://doi.org/10.28979/jarnas.909872" target="_blank" rel="noopener">doi:10.28979/jarnas.909872</a></div></div></li>
+          <li><span class="y">2020</span><div><div class="t">High-resolution ground penetrating radar investigation of Yerebatan (Basilica) Cistern in Istanbul (Constantinople) for restoration purposes</div><div class="a">Aydıngün Ş., Kurban Y.C., Yalçıner C.Ç., Büyüksaraç A., Gündoğdu E., Altunel E. · <span class="j">Mediterranean Archaeology and Archaeometry 20(3), 13–26</span> · <a href="https://doi.org/10.5281/zenodo.3930402" target="_blank" rel="noopener">doi:10.5281/zenodo.3930402</a></div></div></li>
+          <li><span class="y">2019</span><div><div class="t">Non-destructive damage analysis in Kariye (Chora) Museum as a cultural heritage building</div><div class="a">Yalçıner C.Ç., Büyüksaraç A., Kurban Y.C. · <span class="j">Journal of Applied Geophysics 171, 103874</span> · <a href="https://doi.org/10.1016/j.jappgeo.2019.103874" target="_blank" rel="noopener">doi:10.1016/j.jappgeo.2019.103874</a></div></div></li>
+          <li><span class="y">2019</span><div><div class="t">Coordinated application of structural strengthening injections with GPR method for restoration of historical artifacts: example study of Bodrum castle</div><div class="a">Yalçıner C.Ç. · <span class="j">Journal of Geophysics and Engineering 16(2), 325–331</span> · <a href="https://doi.org/10.1093/jge/gxz009" target="_blank" rel="noopener">doi:10.1093/jge/gxz009</a></div></div></li>
+          <li><span class="y">2018</span><div><div class="t">Paleoseismic history and slip rate along the Sapanca–Akyazı segment of the 1999 İzmit earthquake rupture (Mw 7.4) of the North Anatolian Fault (Turkey)</div><div class="a">Dikbaş A., Akyüz H.S., Meghraoui M., Ferry M., Altunel E., Zabcı C. <span class="tr">ve ark.</span><span class="en">et al.</span> · <span class="j">Tectonophysics 738, 92–111</span> · <a href="https://doi.org/10.1016/j.tecto.2018.04.019" target="_blank" rel="noopener">doi:10.1016/j.tecto.2018.04.019</a></div></div></li>
+          <li><span class="y">2017</span><div><div class="t">Research using GPR into the cause of cracks and depressions in the floor of the gallery of Hagia Sophia Museum</div><div class="a">Yalçıner C.Ç., Kurban Y.C., Altunel E. · <span class="j">Construction and Building Materials 139, 458–466</span> · <a href="https://doi.org/10.1016/j.conbuildmat.2017.02.036" target="_blank" rel="noopener">doi:10.1016/j.conbuildmat.2017.02.036</a></div></div></li>
+          <li><span class="y">2017</span><div><div class="t">GPR analysis of Sultan Ahmed III Library (Enderun) in Topkapı Palace, Istanbul before restoration<span class="tag"><span class="tr">kitap bölümü</span><span class="en">book chapter</span></span></div><div class="a">Büyüksaraç A., Yalçıner C.Ç., Kurban Y.C. · <span class="j">Civil Engineering Present Problems, Innovative Solutions, BJG Consulting, 175–186</span></div></div></li>
+          <li><span class="y">2017</span><div><div class="t">Simav Fayındaki Düşey Yerdeğiştirmelerin GPR (Yeraltı Radarı) Yöntemi ile Belirlenmesi</div><div class="a">Gündoğdu E., Kurban Y.C., Yalçıner C.Ç., Özden S. · <span class="j">ÇOMÜ Fen Bilimleri Enstitüsü Dergisi 3(2), 17–33</span></div></div></li>
+          <li><span class="y">2016</span><div><div class="t">Hydrothermal fluids circulation and travertine deposition in an active tectonic setting: Insights from the Kamara geothermal area (western Anatolia, Turkey)</div><div class="a">Brogi A., Alçiçek M.C., Yalçıner C.Ç., Capezzuoli E., Liotta D., Meccheri M. <span class="tr">ve ark.</span><span class="en">et al.</span> · <span class="j">Tectonophysics 680, 211–232</span> · <a href="https://doi.org/10.1016/j.tecto.2016.05.003" target="_blank" rel="noopener">doi:10.1016/j.tecto.2016.05.003</a></div></div></li>
+          <li><span class="y">2014</span><div><div class="t">Geophysical investigations at Agadere Cemetery, Gallipoli Peninsula, NW Turkey</div><div class="a"><span class="j">Australian Journal of Forensic Sciences 46(1), 111–123</span> · <a href="https://doi.org/10.1080/00450618.2013.804948" target="_blank" rel="noopener">doi:10.1080/00450618.2013.804948</a></div></div></li>
+          <li><span class="y">2009</span><div><div class="t">New temple discovery at the archaeological site of Nysa (western Turkey) using GPR method</div><div class="a">Yalçıner C.Ç., Bano M., Kadıoğlu M., Karabacak V., Meghraoui M., Altunel E. · <span class="j">Journal of Archaeological Science 36(8), 1680–1689</span> · <a href="https://doi.org/10.1016/j.jas.2008.12.016" target="_blank" rel="noopener">doi:10.1016/j.jas.2008.12.016</a></div></div></li>
+        </ul>
+        <div class="more">
+          <a class="btn" href="https://scholar.google.com/citations?user=YXSzgEsAAAAJ" target="_blank" rel="noopener">Google Scholar ↗</a>
+          <a class="btn" href="https://avesis.comu.edu.tr/yalciner" target="_blank" rel="noopener">Avesis ↗</a>
+          <a class="btn" href="https://www.researchgate.net/profile/Cahit-Caglar-Yalciner" target="_blank" rel="noopener">ResearchGate ↗</a>
+        </div>
+        <div class="thesis">
+          <div class="eyebrow"><span class="tr">Doktora tezi · Strasbourg / ESOGÜ · 2009</span><span class="en">PhD thesis · Strasbourg / ESOGÜ · 2009</span></div>
+          <h3>Investigation of buried objects with GPR: Application to archaeoseismology and palaeoseismology in the Büyük Menderes Graben (Turkey)</h3>
+          <p><span class="tr">Altı sahada GPR sonuçları hendek, kazı ve LIDAR ile karşılaştırıldı. Danışmanlar: Mustapha Meghraoui, Erhan Altunel, Maksim Bano.</span><span class="en">GPR results at six sites were tested against trenches, excavation and LIDAR. Advisors: Mustapha Meghraoui, Erhan Altunel, Maksim Bano.</span>
+          <a href="https://publication-theses.unistra.fr/public/theses_doctorat/2009/YALCINER_Cahit_Caglar_2009.pdf" target="_blank" rel="noopener"><span class="tr">Tezi oku (PDF)</span><span class="en">Read the thesis (PDF)</span> ↗</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ECAY -->
+<section class="blk" id="ecay">
+  <div class="wrap">
+    <div class="sh">
+      <div class="eyebrow">ECAY Teknoloji</div>
+      <div>
+        <h2><span class="tr">Akademik bilgiyi sahaya taşıyan şirket</span><span class="en">Taking research methods into the field</span></h2>
+        <p><span class="tr">2014'te Prof. Dr. Erhan Altunel ile kuruldu; 2015'ten beri Dr. Yunus Can Kurban ile Çanakkale Teknopark'ta. Kurucu ortak ve CEO.</span><span class="en">Founded in 2014 with Prof. Erhan Altunel; based at Çanakkale Technopark with Dr. Yunus Can Kurban since 2015. Co-founder and CEO.</span></p>
+      </div>
+    </div>
+    <div class="ecay">
+      <div>
+        <p class="prose"><span class="tr">ECAY; GPR, yapı radarı, termal görüntüleme, manyetik prospeksiyon ve 3B jeodezik modelleme hizmeti veriyor, ayrıca kendi jeofizik cihazlarını tasarlıyor ve üretiyor. Farklı derinliklere hedef gömülü yaklaşık 15.000 m² bir jeofizik test sahası işletiyor.</span><span class="en">ECAY provides GPR, structural radar, thermal imaging, magnetic prospection and 3D geodetic modelling, and designs and builds its own geophysical instruments. It runs a geophysical test site of about 15,000 m² with targets buried at known depths.</span></p>
+        <ul class="svc">
+          <li>GPR</li><li>GPR-CX</li><li><span class="tr">Termal görüntüleme</span><span class="en">Thermal imaging</span></li><li><span class="tr">Manyetik prospeksiyon</span><span class="en">Magnetic prospection</span></li><li>TDEM</li><li><span class="tr">İHA manyetometri</span><span class="en">UAV magnetometry</span></li><li><span class="tr">3B modelleme</span><span class="en">3D modelling</span></li><li><span class="tr">Cihaz onarım ve kalibrasyon</span><span class="en">Instrument repair &amp; calibration</span></li>
+        </ul>
+        <div class="cta"><a class="btn primary" href="https://www.ecay.com.tr" target="_blank" rel="noopener">ecay.com.tr ↗</a></div>
+      </div>
+      <div class="kit">
+        <div class="hd"><span class="tr">Cihaz parkından</span><span class="en">From the instrument park</span></div>
+        <dl>
+          <div class="row"><dt>GPR</dt><dd>MALA ProEx · 100/250/500/1000 MHz · RTA 25/50/100 MHz · MALA GX HDR 450/750 MHz</dd></div>
+          <div class="row"><dt><span class="tr">Yapı radarı</span><span class="en">Structural</span></dt><dd>MALA CX · 1.6 GHz</dd></div>
+          <div class="row"><dt><span class="tr">Manyetik</span><span class="en">Magnetic</span></dt><dd>Geometrics G858 <span class="tr">sezyum</span><span class="en">caesium</span> · ECAY PPM-01 · ECAY FGM-02 fluxgate</dd></div>
+          <div class="row"><dt>EM</dt><dd>IRKIT TDEM (RTK GPS)</dd></div>
+          <div class="row"><dt><span class="tr">İHA</span><span class="en">UAV</span></dt><dd>DJI Matrice 600 Pro · Phantom 4 Pro</dd></div>
+          <div class="row"><dt><span class="tr">Termal</span><span class="en">Thermal</span></dt><dd>FLIR Ti25 · FLIR USB</dd></div>
+          <div class="row"><dt><span class="tr">Konum</span><span class="en">Positioning</span></dt><dd>CHC CORS RTK · ECAY RTK DGPS</dd></div>
+        </dl>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CAREER -->
+<section class="blk" id="kariyer">
+  <div class="wrap">
+    <div class="sh">
+      <div class="eyebrow"><span class="tr">Eğitim ve kariyer</span><span class="en">Education &amp; career</span></div>
+      <h2><span class="tr">Kronoloji</span><span class="en">Timeline</span></h2>
+    </div>
+    <div class="body">
+      <div class="side"></div>
+      <ol class="tl">
+        <li><span class="when">2020–</span><div class="what"><b><span class="tr">Profesör</span><span class="en">Professor</span></b><span>ÇOMÜ Çan MYO · <span class="tr">Maden Teknolojileri</span><span class="en">Mining Technologies</span></span></div></li>
+        <li><span class="when">2015–</span><div class="what"><b><span class="tr">Kurucu ortak ve CEO</span><span class="en">Co-founder &amp; CEO</span></b><span>ECAY Teknoloji · <span class="tr">Çanakkale Teknopark</span><span class="en">Çanakkale Technopark</span> (<span class="tr">kuruluş 2014, Eskişehir</span><span class="en">founded 2014, Eskişehir</span>)</span></div></li>
+        <li><span class="when">2014–2020</span><div class="what"><b><span class="tr">Doçent</span><span class="en">Associate Professor</span></b><span>ÇOMÜ Çan MYO</span></div></li>
+        <li><span class="when">2009–2014</span><div class="what"><b><span class="tr">Yardımcı Doçent</span><span class="en">Assistant Professor</span></b><span>ÇOMÜ Çan MYO</span></div></li>
+        <li><span class="when">2004–2009</span><div class="what"><b><span class="tr">Doktora (çift diploma)</span><span class="en">PhD (joint degree)</span></b><span>ESOGÜ <span class="tr">Jeoloji</span><span class="en">Geology</span> · Université de Strasbourg, IPGS <span class="tr">Jeofizik</span><span class="en">Geophysics</span></span></div></li>
+        <li><span class="when">2001–2004</span><div class="what"><b><span class="tr">Yüksek lisans</span><span class="en">MSc</span></b><span>ESOGÜ <span class="tr">Jeoloji · Örtülü aktif fayların VLF-EM ile belirlenmesi</span><span class="en">Geology · Locating concealed active faults with VLF-EM</span></span></div></li>
+        <li><span class="when">1995–1999</span><div class="what"><b><span class="tr">Lisans</span><span class="en">BSc</span></b><span><span class="tr">İTÜ Jeofizik Mühendisliği</span><span class="en">Istanbul Technical University, Geophysical Engineering</span></span></div></li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="blk" id="iletisim">
+  <div class="wrap">
+    <div class="sh">
+      <div class="eyebrow"><span class="tr">İletişim ve profiller</span><span class="en">Contact &amp; profiles</span></div>
+      <div>
+        <h2><span class="tr">Bir saha, bir yapı ya da bir soru için yazın</span><span class="en">Get in touch about a site, a structure or a question</span></h2>
+      </div>
+    </div>
+    <div class="body">
+      <div class="side"></div>
+      <div>
+        <div class="ids">
+          <a href="https://www.researchgate.net/profile/Cahit-Caglar-Yalciner" target="_blank" rel="noopener"><b>ResearchGate</b><span>Cahit-Caglar-Yalciner</span></a>
+          <a href="https://scholar.google.com/citations?user=YXSzgEsAAAAJ" target="_blank" rel="noopener"><b>Google Scholar</b><span>YXSzgEsAAAAJ</span></a>
+          <a href="https://orcid.org/0000-0003-0470-303X" target="_blank" rel="noopener"><b>ORCID</b><span>0000-0003-0470-303X</span></a>
+          <a href="https://www.linkedin.com/in/cahit-%C3%A7a%C4%9Flar-yal%C3%A7%C4%B1ner-8880ba51/" target="_blank" rel="noopener"><b>LinkedIn</b><span>cahit-çağlar-yalçıner</span></a>
+          <a href="https://avesis.comu.edu.tr/yalciner" target="_blank" rel="noopener"><b>Avesis · ÇOMÜ</b><span>avesis.comu.edu.tr/yalciner</span></a>
+          <a href="https://dergipark.org.tr/tr/pub/@yalciner" target="_blank" rel="noopener"><b>DergiPark</b><span>@yalciner</span></a>
+        </div>
+        <div class="contact">
+          <div><div class="k"><span class="tr">E-posta</span><span class="en">Email</span></div><span class="mono mail">caglaryalciner@gmail.com</span><button type="button" class="copy"><span class="tr">kopyala</span><span class="en">copy</span></button><br><span class="mono mail">yalciner@comu.edu.tr</span><button type="button" class="copy"><span class="tr">kopyala</span><span class="en">copy</span></button></div>
+          <div><div class="k">ECAY</div><span class="mono mail">bilgi@ecay.com.tr</span><button type="button" class="copy"><span class="tr">kopyala</span><span class="en">copy</span></button></div>
+          <div><div class="k"><span class="tr">Adres</span><span class="en">Address</span></div><span>ECAY Teknoloji · <span class="tr">Çanakkale Teknoloji Geliştirme Bölgesi No:276/A, Çanakkale</span><span class="en">Çanakkale Technology Development Zone No:276/A, Çanakkale, Türkiye</span></span></div>
+          <div><div class="k">Scopus · WoS</div><span class="mono">34574341700 · Q-9280-2018</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>© 2026 Cahit Çağlar Yalçıner</span>
+    <span class="mono">Çanakkale · 40.15° N 26.41° E</span>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var root=document.documentElement;
+  function setLang(l){
+    root.classList.toggle('en',l==='en');
+    root.lang=l;
+    document.getElementById('btn-tr').setAttribute('aria-pressed',l==='tr');
+    document.getElementById('btn-en').setAttribute('aria-pressed',l==='en');
+    try{localStorage.setItem('cy-lang',l)}catch(e){}
+  }
+  var saved=null; try{saved=localStorage.getItem('cy-lang')}catch(e){}
+  if(location.hash==='#en') saved='en';
+  setLang(saved==='en'?'en':'tr');
+  document.querySelectorAll('.lang button').forEach(function(b){b.addEventListener('click',function(){setLang(b.dataset.set)})});
+
+  // project filter
+  var fb=document.querySelectorAll('.filters button');
+  fb.forEach(function(b){b.addEventListener('click',function(){
+    fb.forEach(function(x){x.setAttribute('aria-pressed',x===b)});
+    var f=b.dataset.f;
+    document.querySelectorAll('.proj').forEach(function(p){p.hidden=!(f==='all'||p.dataset.cat===f)});
+  })});
+
+  // copy email
+  document.querySelectorAll('.copy').forEach(function(btn){btn.addEventListener('click',function(){
+    var el=btn.previousElementSibling, t=el.textContent;
+    function sel(){var r=document.createRange();r.selectNodeContents(el);var s=getSelection();s.removeAllRanges();s.addRange(r)}
+    try{navigator.clipboard.writeText(t).then(function(){btn.style.color='var(--accent)'},sel)}catch(err){sel()}
+  })});
+
+  // Synthetic processed radargram: 250 MHz Ricker, v = 0.10 m/ns, 40 m x 120 ns
+  var cv=document.getElementById('radargram'), ctx=cv.getContext('2d');
+  var X=40, T=120, V=0.10, F=0.25, PI2=Math.PI*Math.PI;
+  var M={l:46,r:40,t:8,b:22}; // plot margins (css px)
+  var seed=11; function rnd(){seed=(seed*16807)%2147483647;return (seed-1)/2147483646}
+  function gauss(){return (rnd()+rnd()+rnd()+rnd()-2)*0.87}
+  function ricker(tau){var a=PI2*F*F*tau*tau;return (1-2*a)*Math.exp(-a)}
+  // stratigraphy: two-way time (ns) as function of x (m)
+  var layers=[
+    {f:function(x){return 9+1.2*Math.sin(x/5.5)+0.6*Math.sin(x/1.7)},a:.55,faulted:false},          // topsoil base
+    {f:function(x){return 17+2.2*Math.sin(x/7+0.8)+0.05*x},a:.7,faulted:false},                       // colluvial wedge base (unfaulted, post-event)
+    {f:function(x){return 31+2.5*Math.sin(x/9+1.2)+0.12*x},a:.85,faulted:true},
+    {f:function(x){return 38+2.0*Math.sin(x/9+1.6)+0.12*x},a:-.5,faulted:true},
+    {f:function(x){return 54+3.0*Math.sin(x/11+2.0)+0.15*x},a:.9,faulted:true},
+    {f:function(x){return 76+3.5*Math.sin(x/13+2.6)+0.18*x},a:.7,faulted:true},
+    {f:function(x){return 97+4.0*Math.sin(x/15+3.1)+0.2*x},a:.55,faulted:true}
+  ];
+  function faultX(t){return 21.5+0.075*(t-20)}           // dipping fault plane
+  function throwT(t){return 3+0.07*t}                     // growth: offset increases with depth
+  var targets=[ // apex x (m), two-way time (ns), amplitude
+    {x:7.5,t:22,a:1.15,ring:true},   // pipe
+    {x:31.5,t:42,a:-.9,ring:true},   // void (reversed polarity)
+    {x:13,t:64,a:.55,ring:false},    // boulder
+    {x:36,t:84,a:.45,ring:false}
+  ];
+  var lenses=[]; for(var q=0;q<90;q++){var lt0=6+rnd()*110;lenses.push({x0:rnd()*X,len:1+rnd()*5,t:lt0,a:(rnd()-.5)*(.5-lt0/400),s:(rnd()-.5)*.6})}
+  var img=null, iw=0, ih=0;
+  function build(w,h){
+    iw=w; ih=h; img=ctx.createImageData(w,h); var d=img.data;
+    var traceJit=[]; for(var c=0;c<w;c++) traceJit.push(gauss()*.04);
+    var noiseSeedBase=rnd();
+    for(var c=0;c<w;c++){
+      var x=c/(w-1)*X, xfCache=null;
+      // precompute layer times at this trace (with fault offset)
+      var lt=[];
+      for(var k=0;k<layers.length;k++){
+        var L=layers[k], t0=L.f(x);
+        if(L.faulted && x>faultX(t0)) t0+=throwT(t0);
+        var latAmp=L.a*(0.7+0.2*Math.sin(x*0.9+k*1.7)+0.1*Math.sin(x*3.7+k));
+        if(L.faulted){var fd=Math.abs(x-faultX(t0)); if(fd<0.8) latAmp*=0.25+0.75*fd/0.8}
+        lt.push([t0,latAmp]);
+      }
+      for(var r=0;r<h;r++){
+        var t=r/(h-1)*T, s=0;
+        // residual direct wave after background removal
+        s+=0.35*ricker(t-2.5)+0.15*ricker(t-6);
+        for(var k=0;k<lt.length;k++){var dt=t-lt[k][0]; if(dt>-8&&dt<8) s+=lt[k][1]*ricker(dt)}
+        // fault-tip diffractions on faulted reflectors
+        for(var k=2;k<layers.length;k++){
+          var ta=layers[k].f(21.5); ta=layers[k].f(faultX(ta)); var xa=faultX(ta), dx=x-xa;
+          var th=2*Math.sqrt(Math.pow(ta*V/2,2)+dx*dx)/V, dt=t-th;
+          if(dt>-6&&dt<6&&Math.abs(dx)<6) s+=0.3*ricker(dt)*Math.exp(-Math.abs(dx)/1.4);
+        }
+        for(var q=0;q<lenses.length;q++){var Ls=lenses[q],ddx=x-Ls.x0; if(ddx>0&&ddx<Ls.len){var dt=t-(Ls.t+Ls.s*ddx); if(dt>-6&&dt<6) s+=Ls.a*Math.sin(Math.PI*ddx/Ls.len)*ricker(dt)}}
+        // point targets: hyperbolae t = 2*sqrt(d^2+dx^2)/v
+        for(var j=0;j<targets.length;j++){
+          var g=targets[j], dx=x-g.x, dd=g.t*V/2, th=2*Math.sqrt(dd*dd+dx*dx)/V, dt=t-th;
+          if(Math.abs(dx)<6){
+            var w8=Math.exp(-Math.abs(dx)/1.7)*(dd/Math.sqrt(dd*dd+dx*dx));
+            if(dt>-6&&dt<6) s+=g.a*w8*ricker(dt);
+            if(g.ring){var d2=dt-5.5; if(d2>-6&&d2<6) s-=0.45*g.a*w8*ricker(d2); var d3=dt-11; if(d3>-6&&d3<6) s+=0.2*g.a*w8*ricker(d3)}
+          }
+        }
+        // noise grows with time (after AGC)
+        s+=gauss()*(0.05+0.0011*t)+traceJit[c]*(t/T);
+        // horizontal ringing band, faint
+        s+=0.03*Math.sin(t*1.6+c*0.002);
+        var v=128+s*118; v=v<0?0:v>255?255:v;
+        var i=(r*w+c)*4; d[i]=d[i+1]=d[i+2]=v; d[i+3]=255;
+      }
+    }
+  }
+  var off=document.createElement('canvas'), offCtx=off.getContext('2d');
+  function draw(progress){
+    var cw=cv.clientWidth, ch=cv.clientHeight, dpr=Math.min(2,window.devicePixelRatio||1);
+    var W=Math.round(cw*dpr), H=Math.round(ch*dpr);
+    if(cv.width!==W||cv.height!==H){cv.width=W;cv.height=H}
+    var pw=Math.max(10,Math.round((cw-M.l-M.r)*dpr)), ph=Math.max(10,Math.round((ch-M.t-M.b)*dpr));
+    if(!img||iw!==pw||ih!==ph){build(pw,ph);off.width=pw;off.height=ph;offCtx.putImageData(img,0,0)}
+    ctx.setTransform(1,0,0,1,0,0);
+    var cs=getComputedStyle(root), fg=cs.getPropertyValue('--scan-fg').trim(), bg=cs.getPropertyValue('--scan-bg').trim(), sig=cs.getPropertyValue('--signal').trim();
+    ctx.fillStyle=bg; ctx.fillRect(0,0,W,H);
+    var px=M.l*dpr, py=M.t*dpr, shown=Math.round(pw*progress);
+    ctx.fillStyle='#808080'; ctx.fillRect(px,py,pw,ph);
+    if(shown>0) ctx.drawImage(off,0,0,shown,ph,px,py,shown,ph);
+    if(progress<1){ctx.fillStyle=sig;ctx.fillRect(px+shown,py,2*dpr,ph)}
+    // axes
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+    var pwc=cw-M.l-M.r, phc=ch-M.t-M.b;
+    ctx.strokeStyle=fg; ctx.fillStyle=fg; ctx.globalAlpha=.7; ctx.lineWidth=1;
+    ctx.strokeRect(M.l-.5,M.t-.5,pwc+1,phc+1);
+    ctx.font='10px "IBM Plex Mono",ui-monospace,monospace';
+    ctx.textBaseline='middle'; ctx.textAlign='right';
+    for(var ns=0;ns<=T;ns+=20){var y=M.t+ns/T*phc; ctx.fillText(ns+(ns===0?' ns':''),M.l-6,y); ctx.beginPath();ctx.moveTo(M.l-3,y);ctx.lineTo(M.l,y);ctx.stroke()}
+    ctx.textAlign='left';
+    for(var m=0;m<=6;m+=1){var y=M.t+(2*m/V)/T*phc; ctx.fillText(m+(m===0?' m':''),M.l+pwc+6,y); ctx.beginPath();ctx.moveTo(M.l+pwc,y);ctx.lineTo(M.l+pwc+3,y);ctx.stroke()}
+    ctx.textAlign='center'; ctx.textBaseline='top';
+    var step=cw<520?10:5;
+    for(var xm=0;xm<=X;xm+=step){var x=M.l+xm/X*pwc; ctx.fillText(xm+(xm===X?' m':''),Math.min(x,M.l+pwc-8),M.t+phc+5); ctx.beginPath();ctx.moveTo(x,M.t+phc);ctx.lineTo(x,M.t+phc+3);ctx.stroke()}
+    ctx.globalAlpha=1;
+  }
+  var reduce=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+  draw(1);
+  if(!reduce){
+    var t0=null;function step(ts){if(t0===null)t0=ts;var p=Math.min(1,(ts-t0)/2400);draw(p);if(p<1)requestAnimationFrame(step)}
+    requestAnimationFrame(step);
+  }
+  var rt;window.addEventListener('resize',function(){clearTimeout(rt);rt=setTimeout(function(){draw(1)},150)});
+  if(window.matchMedia){matchMedia('(prefers-color-scheme: dark)').addEventListener('change',function(){draw(1)})}
+  new MutationObserver(function(){draw(1)}).observe(root,{attributes:true,attributeFilter:['data-theme']});
+})();
+</script>
+
+</body>
+</html>
